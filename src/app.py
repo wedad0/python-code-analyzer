@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
+from syntax_checker import check_syntax
 import os
 
 app = Flask(__name__)
@@ -26,7 +27,24 @@ def upload_file():
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
     file.save(file_path)
 
-    return redirect(url_for("results_page"))
+    with open(file_path, "r", encoding="utf-8") as f:
+        code = f.read()
+        
+    syntax_result = check_syntax(code)
+
+    if syntax_result["error"]:
+        error_message = f"{syntax_result['error_type']} at line {syntax_result['line']}: {syntax_result['msg']}"
+    else:
+        error_message = "None"
+
+    return render_template(
+        "analysis_result.html",
+        lines=len(code.splitlines()),
+        functions=0,
+        classes=0,
+        imports=0,
+        error=error_message
+    )
 
 @app.route("/results")
 def results_page():
