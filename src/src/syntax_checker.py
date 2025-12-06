@@ -1,9 +1,9 @@
 import ast
 
 def check_syntax(code: str):
-    """
-    يحاول تحليل الكود بحثًا عن أخطاء نحوية.
-    يرجع قاموس يحتوي على حالة التحليل.
+        """  
+    Tries to analyze the code for syntax errors.  
+    Returns a dictionary containing the analysis result.  
     """
     try:
         ast.parse(code)
